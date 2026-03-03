@@ -1,0 +1,1486 @@
+/* ================================================================
+       CSS CUSTOM PROPERTIES — SISTEM WARNA MENCOLOK
+       Dominan: Indigo gelap (#3730a3) + Coral/Oranye (#f97316)
+       Latar  : Putih bersih dengan aksen abu sangat tipis
+    ================================================================ */
+:root {
+    /* Warna utama */
+    --indigo: #3730a3;
+    /* indigo kuat — warna dominan */
+    --indigo-gelap: #1e1b4b;
+    /* indigo sangat gelap — teks, header */
+    --indigo-muda: #e0e7ff;
+    /* indigo pucat — background badge */
+    --indigo-medium: #6366f1;
+    /* indigo medium — hover, aksen */
+
+    /* Warna aksen */
+    --coral: #f97316;
+    /* oranye coral mencolok — streak, highlight */
+    --coral-muda: #fff7ed;
+    /* oranye sangat pucat — background tag */
+    --coral-gelap: #ea580c;
+    /* oranye gelap — hover coral */
+
+    /* Warna status */
+    --hijau: #16a34a;
+    --hijau-muda: #dcfce7;
+    --kuning: #d97706;
+    --kuning-muda: #fef3c7;
+    --merah: #dc2626;
+    --merah-muda: #fee2e2;
+
+    /* Warna netral */
+    --putih: #ffffff;
+    --abu-50: #f8fafc;
+    --abu-100: #f1f5f9;
+    --abu-200: #e2e8f0;
+    --abu-300: #cbd5e1;
+    --abu-400: #94a3b8;
+    --abu-500: #64748b;
+    --abu-600: #475569;
+    --abu-700: #334155;
+    --teks-utama: #0f172a;
+    /* hampir hitam — teks utama */
+    --teks-sekunder: #475569;
+    /* abu gelap — teks sekunder */
+    --teks-redup: #94a3b8;
+    /* abu — teks placeholder/label */
+
+    /* Shadow & efek */
+    --shadow-sm:
+        0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.06);
+    --shadow-md:
+        0 4px 6px rgba(15, 23, 42, 0.07), 0 2px 4px rgba(15, 23, 42, 0.06);
+    --shadow-lg:
+        0 10px 15px rgba(15, 23, 42, 0.08), 0 4px 6px rgba(15, 23, 42, 0.05);
+    --shadow-xl:
+        0 20px 25px rgba(15, 23, 42, 0.1), 0 8px 10px rgba(15, 23, 42, 0.04);
+
+    /* Radius & spacing */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-xl: 20px;
+    --padding-x: 48px;
+}
+
+/* ================================================================
+       RESET GLOBAL
+    ================================================================ */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ================================================================
+       BODY — latar dasar, font utama
+    ================================================================ */
+body {
+    background-color: var(--abu-100);
+    color: var(--teks-utama);
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ================================================================
+       LAYAR INTRO — Animasi pembuka (bukan konten, hanya presentasi)
+       Menggunakan <div> bukan <section> karena bukan bagian dari
+       dokumen/konten — hanya efek visual sementara.
+    ================================================================ */
+#layar-intro {
+    position: fixed;
+    inset: 0;
+    background: var(--indigo-gelap);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    pointer-events: none;
+    /* Menghilang setelah 2.8 detik */
+    animation: introKeluar 0.8s cubic-bezier(0.4, 0, 1, 1) 2.6s forwards;
+}
+
+/* Nama aplikasi di layar intro */
+#layar-intro .intro-nama {
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    font-weight: 800;
+    color: var(--putih);
+    letter-spacing: -2px;
+    opacity: 0;
+    transform: translateY(28px);
+    animation: introMasuk 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
+}
+
+/* Titik aksen berwarna coral */
+#layar-intro .intro-nama span {
+    color: var(--coral);
+}
+
+/* Tagline kecil di bawah nama */
+#layar-intro .intro-tagline {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--abu-400);
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: introMasuk 0.5s ease 0.9s forwards;
+}
+
+/* Garis bawah animasi */
+#layar-intro .intro-garis {
+    width: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--coral), var(--indigo-medium));
+    border-radius: 99px;
+    animation: garisLebar 0.9s ease 1.3s forwards;
+}
+
+@keyframes introMasuk {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes garisLebar {
+    to {
+        width: 240px;
+    }
+}
+
+@keyframes introKeluar {
+    to {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+/* ================================================================
+       #APP — Pembungkus seluruh aplikasi
+       Konten utama muncul setelah animasi intro selesai
+    ================================================================ */
+#app {
+    opacity: 0;
+    animation: appMuncul 0.7s ease 3s forwards;
+}
+
+@keyframes appMuncul {
+    to {
+        opacity: 1;
+    }
+}
+
+/* ================================================================
+       <header> — Bagian kepala halaman
+       Berisi: nama aplikasi, tanggal, streak api, statistik global
+    ================================================================ */
+body>#app>header {
+    background: var(--indigo-gelap);
+    padding: var(--padding-x);
+    padding-bottom: 36px;
+}
+
+/* Baris atas: hgroup + aside streak */
+body>#app>header>.baris-atas {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-bottom: 36px;
+}
+
+/* <hgroup> = judul + deskripsi tanggal, semantik HTML5 */
+body>#app>header hgroup h1 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 800;
+    color: var(--putih);
+    letter-spacing: -1.5px;
+    line-height: 1;
+}
+
+body>#app>header hgroup h1 em {
+    font-style: normal;
+    color: var(--coral);
+}
+
+/* <p> deskripsi tanggal di dalam hgroup */
+body>#app>header hgroup p {
+    margin-top: 8px;
+    font-size: 0.82rem;
+    color: var(--abu-400);
+    font-weight: 400;
+}
+
+/* ================================================================
+       <aside> STREAK — Informasi streak api (konten sampingan/pelengkap)
+       Semantik: <aside> tepat karena streak adalah info pendukung,
+       bukan konten utama halaman
+
+       SISTEM LEVEL WARNA API (mirip TikTok):
+       ─────────────────────────────────────────
+       💤 Mati   : 0 hari     — abu-abu, tidak bergerak
+       🔥 Pemula : 1–6 hari   — oranye biasa
+       🔥 Bronze : 7–13 hari  — oranye kecoklatan + bronze glow
+       🔥 Silver : 14–29 hari — putih kebiruan + silver glow
+       🔥 Gold   : 30–49 hari — kuning emas + golden glow + partikel
+       🔥 Epic   : 50–99 hari — ungu-pink + purple glow + efek halo
+       🔥 Legend : 100+ hari  — gradien pelangi + rainbow glow + partikel
+       ─────────────────────────────────────────
+    ================================================================ */
+body>#app>header aside[aria-label="streak"] {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-lg);
+    padding: 16px 22px;
+    backdrop-filter: blur(4px);
+    transition:
+        border-color 0.6s ease,
+        background 0.6s ease,
+        box-shadow 0.6s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* ── Level: MATI ── */
+body>#app>header aside[aria-label="streak"].level-mati {
+    border-color: rgba(148, 163, 184, 0.2);
+}
+
+/* ── Level: PEMULA (1–6 hari) ── oranye standar */
+body>#app>header aside[aria-label="streak"].level-pemula {
+    border-color: rgba(249, 115, 22, 0.35);
+    box-shadow: 0 0 20px rgba(249, 115, 22, 0.12);
+}
+
+/* ── Level: BRONZE (7–13 hari) ── oranye tembaga hangat */
+body>#app>header aside[aria-label="streak"].level-bronze {
+    border-color: rgba(205, 127, 50, 0.5);
+    box-shadow:
+        0 0 28px rgba(205, 127, 50, 0.25),
+        inset 0 1px 0 rgba(205, 127, 50, 0.15);
+    background: rgba(205, 127, 50, 0.08);
+}
+
+/* ── Level: SILVER (14–29 hari) ── biru perak dingin */
+body>#app>header aside[aria-label="streak"].level-silver {
+    border-color: rgba(148, 212, 255, 0.5);
+    box-shadow:
+        0 0 32px rgba(148, 212, 255, 0.3),
+        inset 0 1px 0 rgba(148, 212, 255, 0.2);
+    background: rgba(148, 212, 255, 0.06);
+}
+
+/* ── Level: GOLD (30–49 hari) ── emas berkilau */
+body>#app>header aside[aria-label="streak"].level-gold {
+    border-color: rgba(255, 215, 0, 0.6);
+    box-shadow:
+        0 0 40px rgba(255, 215, 0, 0.35),
+        0 0 80px rgba(255, 180, 0, 0.15),
+        inset 0 1px 0 rgba(255, 215, 0, 0.25);
+    background: rgba(255, 215, 0, 0.07);
+}
+
+/* ── Level: EPIC (50–99 hari) ── ungu mistis */
+body>#app>header aside[aria-label="streak"].level-epic {
+    border-color: rgba(196, 107, 255, 0.65);
+    box-shadow:
+        0 0 45px rgba(196, 107, 255, 0.4),
+        0 0 90px rgba(139, 92, 246, 0.2),
+        inset 0 1px 0 rgba(196, 107, 255, 0.3);
+    background: rgba(139, 92, 246, 0.1);
+}
+
+/* ── Level: LEGEND (100+ hari) ── pelangi spektrum penuh */
+body>#app>header aside[aria-label="streak"].level-legend {
+    border-color: transparent;
+    background: rgba(255, 255, 255, 0.06);
+    /* Border pelangi animasi */
+    animation: rainbowBorder 3s linear infinite !important;
+}
+
+@keyframes rainbowBorder {
+    0% {
+        box-shadow:
+            0 0 0 2px #ff4444,
+            0 0 50px rgba(255, 68, 68, 0.4),
+            0 0 100px rgba(255, 68, 68, 0.15);
+    }
+
+    16% {
+        box-shadow:
+            0 0 0 2px #ff8800,
+            0 0 50px rgba(255, 136, 0, 0.4),
+            0 0 100px rgba(255, 136, 0, 0.15);
+    }
+
+    33% {
+        box-shadow:
+            0 0 0 2px #ffdd00,
+            0 0 50px rgba(255, 221, 0, 0.4),
+            0 0 100px rgba(255, 221, 0, 0.15);
+    }
+
+    50% {
+        box-shadow:
+            0 0 0 2px #44ff88,
+            0 0 50px rgba(68, 255, 136, 0.4),
+            0 0 100px rgba(68, 255, 136, 0.15);
+    }
+
+    66% {
+        box-shadow:
+            0 0 0 2px #44aaff,
+            0 0 50px rgba(68, 170, 255, 0.4),
+            0 0 100px rgba(68, 170, 255, 0.15);
+    }
+
+    83% {
+        box-shadow:
+            0 0 0 2px #cc44ff,
+            0 0 50px rgba(204, 68, 255, 0.4),
+            0 0 100px rgba(204, 68, 255, 0.15);
+    }
+
+    100% {
+        box-shadow:
+            0 0 0 2px #ff4444,
+            0 0 50px rgba(255, 68, 68, 0.4),
+            0 0 100px rgba(255, 68, 68, 0.15);
+    }
+}
+
+/* ── WRAPPER API SVG ── */
+body>#app>header aside[aria-label="streak"] .api-wrapper {
+    width: 64px;
+    height: 76px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+}
+
+body>#app>header aside[aria-label="streak"] .api-wrapper svg {
+    width: 100%;
+    height: 100%;
+    transition: filter 0.5s ease;
+}
+
+/* Ikon tidur saat mati */
+body>#app>header aside[aria-label="streak"] .api-wrapper .tidur-icon {
+    font-size: 2.8rem;
+    line-height: 1;
+    filter: grayscale(1) opacity(0.3);
+}
+
+/* Animasi goyang per level — diterapkan ke svg via kelas .api-wrapper */
+body>#app>header aside[aria-label="streak"] .api-wrapper.level-pemula svg {
+    filter: drop-shadow(0 0 12px rgba(251, 146, 60, 0.75));
+    animation: svgGoyangPelan 1.6s ease-in-out infinite;
+}
+
+body>#app>header aside[aria-label="streak"] .api-wrapper.level-bronze svg {
+    filter: drop-shadow(0 0 16px rgba(205, 127, 50, 0.9)) drop-shadow(0 0 6px rgba(255, 100, 0, 0.5));
+    animation: svgGoyangNormal 1.2s ease-in-out infinite;
+}
+
+body>#app>header aside[aria-label="streak"] .api-wrapper.level-silver svg {
+    filter: drop-shadow(0 0 20px rgba(148, 212, 255, 0.95)) drop-shadow(0 0 8px rgba(200, 240, 255, 0.6));
+    animation: svgGoyangNormal 1s ease-in-out infinite;
+}
+
+body>#app>header aside[aria-label="streak"] .api-wrapper.level-gold svg {
+    filter: drop-shadow(0 0 24px rgba(255, 215, 0, 1)) drop-shadow(0 0 10px rgba(255, 180, 0, 0.9)) drop-shadow(0 0 3px #fffde7);
+    animation: svgGoyangBesar 0.9s ease-in-out infinite;
+}
+
+body>#app>header aside[aria-label="streak"] .api-wrapper.level-epic svg {
+    filter: drop-shadow(0 0 26px rgba(196, 107, 255, 1)) drop-shadow(0 0 12px rgba(139, 92, 246, 0.9)) drop-shadow(0 0 5px #ede9fe);
+    animation: svgEpic 0.85s ease-in-out infinite;
+}
+
+body>#app>header aside[aria-label="streak"] .api-wrapper.level-legend svg {
+    animation: svgLegend 0.65s ease-in-out infinite;
+}
+
+@keyframes svgGoyangPelan {
+
+    0%,
+    100% {
+        transform: rotate(-5deg) scale(1);
+    }
+
+    50% {
+        transform: rotate(5deg) scale(1.08);
+    }
+}
+
+@keyframes svgGoyangNormal {
+
+    0%,
+    100% {
+        transform: rotate(-8deg) scale(1);
+    }
+
+    50% {
+        transform: rotate(8deg) scale(1.14);
+    }
+}
+
+@keyframes svgGoyangBesar {
+
+    0%,
+    100% {
+        transform: rotate(-11deg) scale(1);
+    }
+
+    50% {
+        transform: rotate(11deg) scale(1.2);
+    }
+}
+
+@keyframes svgEpic {
+    0% {
+        transform: rotate(-10deg) scale(1);
+        filter: drop-shadow(0 0 26px #c46bff) drop-shadow(0 0 12px #8b5cf6);
+    }
+
+    25% {
+        transform: rotate(0) scale(1.22);
+        filter: drop-shadow(0 0 36px #e070ff) drop-shadow(0 0 18px #b464ff);
+    }
+
+    50% {
+        transform: rotate(10deg) scale(1);
+        filter: drop-shadow(0 0 26px #c46bff) drop-shadow(0 0 12px #8b5cf6);
+    }
+
+    75% {
+        transform: rotate(0) scale(1.16);
+        filter: drop-shadow(0 0 32px #c86eff);
+    }
+
+    100% {
+        transform: rotate(-10deg) scale(1);
+    }
+}
+
+@keyframes svgLegend {
+    0% {
+        transform: rotate(-10deg) scale(1);
+        filter: drop-shadow(0 0 28px #ff4444) drop-shadow(0 0 12px #ff8800);
+    }
+
+    20% {
+        transform: rotate(0) scale(1.24);
+        filter: drop-shadow(0 0 36px #ffdd00) drop-shadow(0 0 16px #ff8800);
+    }
+
+    40% {
+        transform: rotate(9deg) scale(1.05);
+        filter: drop-shadow(0 0 28px #44ff88) drop-shadow(0 0 12px #00ffcc);
+    }
+
+    60% {
+        transform: rotate(0) scale(1.18);
+        filter: drop-shadow(0 0 34px #44aaff) drop-shadow(0 0 14px #8844ff);
+    }
+
+    80% {
+        transform: rotate(-9deg) scale(1.05);
+        filter: drop-shadow(0 0 30px #cc44ff) drop-shadow(0 0 12px #ff44aa);
+    }
+
+    100% {
+        transform: rotate(-10deg) scale(1);
+        filter: drop-shadow(0 0 28px #ff4444) drop-shadow(0 0 12px #ff8800);
+    }
+}
+
+/* ── Badge Level — nama level di bawah pesan ── */
+body>#app>header aside[aria-label="streak"] .streak-badge-level {
+    display: inline-block;
+    margin-top: 5px;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    opacity: 0.9;
+}
+
+.badge-pemula {
+    background: rgba(249, 115, 22, 0.2);
+    color: #fb923c;
+}
+
+.badge-bronze {
+    background: rgba(205, 127, 50, 0.25);
+    color: #f59e0b;
+}
+
+.badge-silver {
+    background: rgba(148, 212, 255, 0.2);
+    color: #93c5fd;
+}
+
+.badge-gold {
+    background: rgba(255, 215, 0, 0.2);
+    color: #fde047;
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+}
+
+.badge-epic {
+    background: rgba(139, 92, 246, 0.25);
+    color: #c084fc;
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+}
+
+.badge-legend {
+    background: linear-gradient(90deg,
+            rgba(255, 68, 68, 0.3),
+            rgba(68, 170, 255, 0.3),
+            rgba(204, 68, 255, 0.3));
+    color: #fff;
+    box-shadow: 0 0 12px rgba(200, 100, 255, 0.5);
+    animation: badgeLegendGlow 2s linear infinite;
+}
+
+@keyframes badgeLegendGlow {
+    0% {
+        color: #ff8888;
+    }
+
+    33% {
+        color: #88ffcc;
+    }
+
+    66% {
+        color: #88aaff;
+    }
+
+    100% {
+        color: #ff8888;
+    }
+}
+
+/* ── Teks streak ── */
+body>#app>header aside[aria-label="streak"] .streak-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+body>#app>header aside[aria-label="streak"] .streak-angka {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--putih);
+    line-height: 1;
+    transition: color 0.5s ease;
+}
+
+/* Warna angka per level */
+body>#app>header aside[aria-label="streak"] .streak-angka.level-pemula {
+    color: #fb923c;
+}
+
+body>#app>header aside[aria-label="streak"] .streak-angka.level-bronze {
+    color: #f59e0b;
+}
+
+body>#app>header aside[aria-label="streak"] .streak-angka.level-silver {
+    color: #bae6fd;
+}
+
+body>#app>header aside[aria-label="streak"] .streak-angka.level-gold {
+    color: #fde047;
+    text-shadow: 0 0 12px rgba(255, 215, 0, 0.8);
+}
+
+body>#app>header aside[aria-label="streak"] .streak-angka.level-epic {
+    color: #d8b4fe;
+    text-shadow: 0 0 14px rgba(196, 107, 255, 0.9);
+}
+
+body>#app>header aside[aria-label="streak"] .streak-angka.level-legend {
+    animation: angkaLegend 2s linear infinite;
+}
+
+@keyframes angkaLegend {
+    0% {
+        color: #ff8888;
+        text-shadow: 0 0 16px #ff4444;
+    }
+
+    33% {
+        color: #88ffcc;
+        text-shadow: 0 0 16px #44ff88;
+    }
+
+    66% {
+        color: #88aaff;
+        text-shadow: 0 0 16px #4488ff;
+    }
+
+    100% {
+        color: #ff8888;
+        text-shadow: 0 0 16px #ff4444;
+    }
+}
+
+body>#app>header aside[aria-label="streak"] .streak-angka.mati {
+    color: var(--abu-500);
+}
+
+body>#app>header aside[aria-label="streak"] .streak-label {
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: var(--abu-400);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+body>#app>header aside[aria-label="streak"] .streak-pesan {
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--coral);
+}
+
+body>#app>header aside[aria-label="streak"] .streak-pesan.mati {
+    color: var(--abu-500);
+}
+
+/* ── Partikel bintang untuk Gold+ ── */
+body>#app>header aside[aria-label="streak"] .partikel-container {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+}
+
+.partikel {
+    position: absolute;
+    border-radius: 50%;
+    animation: partikelNaik linear infinite;
+    opacity: 0;
+}
+
+@keyframes partikelNaik {
+    0% {
+        transform: translateY(100%) scale(0);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    80% {
+        opacity: 0.6;
+    }
+
+    100% {
+        transform: translateY(-120%) scale(1.5);
+        opacity: 0;
+    }
+}
+
+/* ================================================================
+       <section> STATISTIK di dalam header
+       Semantik: <section> karena ini kelompok ringkasan/summary
+    ================================================================ */
+body>#app>header>section[aria-label="statistik global"] {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+}
+
+/* Setiap <article> = satu kartu statistik */
+body>#app>header>section[aria-label="statistik global"]>article {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    padding: 16px 18px;
+    transition: background 0.2s;
+}
+
+body>#app>header>section[aria-label="statistik global"]>article:hover {
+    background: rgba(255, 255, 255, 0.11);
+}
+
+body>#app>header>section[aria-label="statistik global"]>article .stat-nilai {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--putih);
+    line-height: 1;
+    margin-bottom: 5px;
+}
+
+body>#app>header>section[aria-label="statistik global"]>article .stat-label {
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: var(--abu-400);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+/* ================================================================
+       <nav> — Navigasi / tombol aksi utama
+       Semantik: <nav> tepat karena tombol ini mengarahkan/mengontrol
+       interaksi utama pengguna di halaman ini
+    ================================================================ */
+body>#app>nav[aria-label="aksi utama"] {
+    background: var(--putih);
+    border-bottom: 1px solid var(--abu-200);
+    padding: 16px var(--padding-x);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow-sm);
+}
+
+/* Tombol utama tambah entri */
+body>#app>nav[aria-label="aksi utama"] button.tombol-utama {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 22px;
+    background: var(--coral);
+    color: var(--putih);
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        background 0.2s,
+        transform 0.15s,
+        box-shadow 0.2s;
+    letter-spacing: 0.3px;
+}
+
+body>#app>nav[aria-label="aksi utama"] button.tombol-utama:hover {
+    background: var(--coral-gelap);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(249, 115, 22, 0.4);
+}
+
+body>#app>nav[aria-label="aksi utama"] button.tombol-utama:active {
+    transform: translateY(0);
+}
+
+/* ================================================================
+       <form> ENTRI BARU
+       Semantik: <form> benar karena ini formulir input pengguna
+       Di dalamnya: <fieldset> untuk mengelompokkan field secara logis
+    ================================================================ */
+body>#app>form#form-entri {
+    display: none;
+    margin: 0 var(--padding-x) 0;
+    background: var(--putih);
+    border: 2px solid var(--indigo-muda);
+    border-top: 3px solid var(--indigo);
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    padding: 28px 32px 32px;
+    box-shadow: var(--shadow-lg);
+    animation: formTurun 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+body>#app>form#form-entri.aktif {
+    display: block;
+}
+
+@keyframes formTurun {
+    from {
+        opacity: 0;
+        transform: translateY(-12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* <fieldset> — grup field yang logis berhubungan */
+body>#app>form#form-entri fieldset {
+    border: none;
+    margin-bottom: 20px;
+}
+
+/* <legend> — judul untuk fieldset */
+body>#app>form#form-entri legend {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    color: var(--indigo);
+    margin-bottom: 14px;
+    padding: 0;
+    float: none;
+    width: 100%;
+}
+
+/* Grid layout dalam fieldset */
+body>#app>form#form-entri fieldset .grid-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+body>#app>form#form-entri fieldset .grid-form .penuh {
+    grid-column: 1 / -1;
+}
+
+/* <label> — label untuk setiap input */
+body>#app>form#form-entri label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--abu-600);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+}
+
+/* <input>, <textarea>, <select> — elemen formulir */
+body>#app>form#form-entri input,
+body>#app>form#form-entri textarea,
+body>#app>form#form-entri select {
+    width: 100%;
+    background: var(--abu-50);
+    border: 1.5px solid var(--abu-200);
+    border-radius: var(--radius-sm);
+    padding: 10px 13px;
+    color: var(--teks-utama);
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 0.88rem;
+    font-weight: 400;
+    outline: none;
+    transition:
+        border-color 0.2s,
+        background 0.2s,
+        box-shadow 0.2s;
+    appearance: auto;
+}
+
+body>#app>form#form-entri input:focus,
+body>#app>form#form-entri textarea:focus,
+body>#app>form#form-entri select:focus {
+    border-color: var(--indigo);
+    background: var(--putih);
+    box-shadow: 0 0 0 3px rgba(55, 48, 163, 0.1);
+}
+
+body>#app>form#form-entri textarea {
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.6;
+}
+
+/* Grup input durasi: jam + menit berdampingan */
+body>#app>form#form-entri .grup-durasi {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+body>#app>form#form-entri .grup-durasi input {
+    text-align: center;
+}
+
+/* Pilihan tag topik (klik untuk aktif) */
+body>#app>form#form-entri .daftar-tag {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+body>#app>form#form-entri .daftar-tag .tag {
+    padding: 6px 15px;
+    border: 1.5px solid var(--abu-200);
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--teks-sekunder);
+    background: var(--abu-50);
+    transition: all 0.15s;
+    user-select: none;
+}
+
+body>#app>form#form-entri .daftar-tag .tag:hover {
+    border-color: var(--indigo);
+    color: var(--indigo);
+    background: var(--indigo-muda);
+}
+
+body>#app>form#form-entri .daftar-tag .tag.terpilih {
+    background: var(--indigo);
+    color: var(--putih);
+    border-color: var(--indigo);
+}
+
+/* Tombol aksi di dalam form */
+body>#app>form#form-entri .baris-aksi {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+body>#app>form#form-entri button[type="submit"] {
+    padding: 11px 26px;
+    background: var(--indigo);
+    color: var(--putih);
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition:
+        background 0.2s,
+        transform 0.15s;
+    letter-spacing: 0.3px;
+}
+
+body>#app>form#form-entri button[type="submit"]:hover {
+    background: var(--indigo-medium);
+    transform: translateY(-1px);
+}
+
+body>#app>form#form-entri button[type="button"].batal {
+    padding: 11px 18px;
+    background: transparent;
+    color: var(--teks-redup);
+    border: 1.5px solid var(--abu-200);
+    border-radius: var(--radius-md);
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+body>#app>form#form-entri button[type="button"].batal:hover {
+    border-color: var(--merah);
+    color: var(--merah);
+    background: var(--merah-muda);
+}
+
+/* ================================================================
+       <main> — Konten utama halaman
+    ================================================================ */
+body>#app>main {
+    padding: 40px var(--padding-x);
+    display: flex;
+    flex-direction: column;
+    gap: 52px;
+}
+
+/* ================================================================
+       JUDUL <section> — Header tiap bagian konten utama
+       Menggunakan <h2> di dalam <section> sesuai hierarki dokumen
+    ================================================================ */
+body>#app>main>section>header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+body>#app>main>section>header h2 {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--teks-redup);
+    white-space: nowrap;
+}
+
+/* Garis pembagi di kanan h2 */
+body>#app>main>section>header::after {
+    content: "";
+    flex: 1;
+    height: 1.5px;
+    background: var(--abu-200);
+    border-radius: 99px;
+}
+
+/* ================================================================
+       REKAP BULANAN — <section> dengan kisi kartu bulan
+    ================================================================ */
+.kisi-bulan {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+/* Setiap <article> = satu kartu bulan */
+.kisi-bulan>article {
+    background: var(--putih);
+    border: 1.5px solid var(--abu-200);
+    border-radius: var(--radius-lg);
+    padding: 22px 24px;
+    transition:
+        box-shadow 0.2s,
+        transform 0.2s,
+        border-color 0.2s;
+    animation: kartuMuncul 0.4s ease both;
+}
+
+.kisi-bulan>article:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-3px);
+    border-color: var(--indigo-muda);
+}
+
+/* Header kartu bulan: nama + badge jumlah sesi */
+.kisi-bulan>article header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.kisi-bulan>article header h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--teks-utama);
+}
+
+.kisi-bulan>article header .badge {
+    background: var(--indigo-muda);
+    color: var(--indigo);
+    padding: 3px 11px;
+    border-radius: 999px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* Grid 3 kolom statistik di dalam kartu bulan */
+.kisi-bulan>article .grid-stat-bulan {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.kisi-bulan>article .grid-stat-bulan .bln-stat .nilai {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--teks-utama);
+    line-height: 1;
+    margin-bottom: 3px;
+}
+
+.kisi-bulan>article .grid-stat-bulan .bln-stat .keterangan {
+    font-size: 0.6rem;
+    font-weight: 500;
+    color: var(--teks-redup);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+/* Progress bar horizontal — perbandingan antar bulan */
+.kisi-bulan>article .progress-bar {
+    height: 4px;
+    background: var(--abu-100);
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.kisi-bulan>article .progress-bar .isi {
+    height: 100%;
+    background: linear-gradient(90deg, var(--indigo), var(--indigo-medium));
+    border-radius: 99px;
+    transition: width 1s ease;
+}
+
+/* ================================================================
+       MATERI DIPELAJARI — <section> dengan kisi kartu topik
+    ================================================================ */
+.kisi-materi {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+    gap: 12px;
+}
+
+/* Setiap <article> = satu kartu topik belajar */
+.kisi-materi>article {
+    background: var(--putih);
+    border: 1.5px solid var(--abu-200);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    transition: all 0.2s;
+    animation: kartuMuncul 0.4s ease both;
+}
+
+.kisi-materi>article:hover {
+    border-color: var(--coral);
+    box-shadow: 0 4px 16px rgba(249, 115, 22, 0.12);
+    transform: translateY(-3px);
+}
+
+.kisi-materi>article .ikon {
+    font-size: 1.8rem;
+    display: block;
+    margin-bottom: 12px;
+    line-height: 1;
+}
+
+.kisi-materi>article h3 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--teks-utama);
+    margin-bottom: 4px;
+}
+
+.kisi-materi>article p.sesi {
+    font-size: 0.7rem;
+    color: var(--teks-redup);
+    font-weight: 500;
+}
+
+.kisi-materi>article .durasi-materi {
+    margin-top: 12px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--coral);
+}
+
+/* ================================================================
+       PROYEK DIBUAT — <section> dengan kisi kartu proyek
+    ================================================================ */
+.kisi-proyek {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+}
+
+/* Setiap <article> = satu kartu proyek */
+.kisi-proyek>article {
+    background: var(--putih);
+    border: 1.5px solid var(--abu-200);
+    border-radius: var(--radius-lg);
+    padding: 22px 24px;
+    position: relative;
+    transition: all 0.2s;
+    animation: kartuMuncul 0.4s ease both;
+}
+
+.kisi-proyek>article:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-3px);
+}
+
+/* Badge status proyek */
+.badge-status {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+.badge-status.selesai {
+    background: var(--hijau-muda);
+    color: var(--hijau);
+}
+
+.badge-status.proses {
+    background: var(--kuning-muda);
+    color: var(--kuning);
+}
+
+.badge-status.ide {
+    background: var(--coral-muda);
+    color: var(--coral);
+}
+
+.kisi-proyek>article h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--teks-utama);
+    margin-bottom: 8px;
+    padding-right: 28px;
+}
+
+.kisi-proyek>article p.deskripsi {
+    font-size: 0.8rem;
+    color: var(--teks-sekunder);
+    line-height: 1.6;
+    margin-bottom: 14px;
+}
+
+/* Daftar tag teknologi yang dipakai */
+.kisi-proyek>article .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.kisi-proyek>article .tag-list span {
+    padding: 3px 10px;
+    background: var(--abu-100);
+    border: 1px solid var(--abu-200);
+    border-radius: 999px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--abu-600);
+}
+
+/* ================================================================
+       LOG HARIAN — <section> dengan daftar <article> entri belajar
+    ================================================================ */
+.daftar-log {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Setiap <article> = satu entri log belajar */
+.daftar-log>article {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 20px;
+    align-items: start;
+    background: var(--putih);
+    border: 1.5px solid var(--abu-200);
+    border-radius: var(--radius-lg);
+    padding: 18px 22px;
+    position: relative;
+    transition: border-color 0.2s;
+    animation: kartuMuncul 0.4s ease both;
+}
+
+.daftar-log>article:hover {
+    border-color: var(--indigo-muda);
+}
+
+/* <time> — elemen semantik untuk tanggal */
+.daftar-log>article .log-kiri time {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--indigo);
+    margin-bottom: 4px;
+}
+
+.daftar-log>article .log-kiri .log-durasi {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--teks-redup);
+}
+
+/* Isi log: judul, catatan, tag */
+.daftar-log>article .log-kanan h3 {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--teks-utama);
+    margin-bottom: 5px;
+    padding-right: 28px;
+}
+
+.daftar-log>article .log-kanan p {
+    font-size: 0.78rem;
+    color: var(--teks-sekunder);
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.daftar-log>article .log-kanan .tag-log {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.daftar-log>article .log-kanan .tag-log span {
+    padding: 3px 10px;
+    background: var(--indigo-muda);
+    border-radius: 999px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--indigo);
+}
+
+/* ================================================================
+       TOMBOL HAPUS — Dipakai di kartu proyek dan log
+    ================================================================ */
+.tombol-hapus {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: transparent;
+    border: none;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    color: var(--abu-300);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tombol-hapus:hover {
+    background: var(--merah-muda);
+    color: var(--merah);
+}
+
+/* ================================================================
+       PESAN KOSONG — Ditampilkan saat belum ada data
+    ================================================================ */
+.pesan-kosong {
+    color: var(--teks-redup);
+    font-size: 0.82rem;
+    font-style: italic;
+    font-weight: 400;
+    padding: 8px 0;
+}
+
+/* ================================================================
+       <footer> — Bagian bawah halaman
+    ================================================================ */
+body>#app>footer {
+    text-align: center;
+    padding: 28px var(--padding-x);
+    border-top: 1.5px solid var(--abu-200);
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--teks-redup);
+    letter-spacing: 0.5px;
+    background: var(--putih);
+}
+
+/* ================================================================
+       ANIMASI KARTU MUNCUL — stagger per urutan
+    ================================================================ */
+@keyframes kartuMuncul {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Delay stagger untuk tiap anak kartu */
+.kisi-bulan>article:nth-child(1),
+.kisi-materi>article:nth-child(1),
+.kisi-proyek>article:nth-child(1),
+.daftar-log>article:nth-child(1) {
+    animation-delay: 0.05s;
+}
+
+.kisi-bulan>article:nth-child(2),
+.kisi-materi>article:nth-child(2),
+.kisi-proyek>article:nth-child(2),
+.daftar-log>article:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.kisi-bulan>article:nth-child(3),
+.kisi-materi>article:nth-child(3),
+.kisi-proyek>article:nth-child(3),
+.daftar-log>article:nth-child(3) {
+    animation-delay: 0.15s;
+}
+
+.kisi-bulan>article:nth-child(4),
+.kisi-materi>article:nth-child(4),
+.kisi-proyek>article:nth-child(4),
+.daftar-log>article:nth-child(4) {
+    animation-delay: 0.2s;
+}
+
+.kisi-bulan>article:nth-child(5),
+.kisi-materi>article:nth-child(5),
+.kisi-proyek>article:nth-child(5),
+.daftar-log>article:nth-child(5) {
+    animation-delay: 0.25s;
+}
+
+.kisi-bulan>article:nth-child(6),
+.kisi-materi>article:nth-child(6),
+.kisi-proyek>article:nth-child(6),
+.daftar-log>article:nth-child(6) {
+    animation-delay: 0.3s;
+}
+
+/* ================================================================
+       RESPONSIF MOBILE
+    ================================================================ */
+@media (max-width: 680px) {
+    :root {
+        --padding-x: 20px;
+    }
+
+    body>#app>header {
+        padding: 24px var(--padding-x);
+    }
+
+    body>#app>form#form-entri {
+        margin: 0 var(--padding-x);
+        border-radius: 0 0 var(--radius-md) var(--radius-md);
+        padding: 22px 20px;
+    }
+
+    body>#app>form#form-entri fieldset .grid-form {
+        grid-template-columns: 1fr;
+    }
+
+    body>#app>main {
+        padding: 28px var(--padding-x);
+        gap: 40px;
+    }
+
+    body>#app>header>.baris-atas {
+        flex-direction: column;
+    }
+
+    body>#app>header>section[aria-label="statistik global"] {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .daftar-log>article {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .kisi-bulan {
+        grid-template-columns: 1fr;
+    }
+}

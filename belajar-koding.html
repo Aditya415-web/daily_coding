@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<!--
+  =====================================================================
+  JURNAL BELAJAR KODING — koding.daily
+  =====================================================================
+  Struktur HTML5 Semantik:
+  <html>
+    <head>          → metadata, style, font
+    <body>
+      <div#intro>   → layar animasi pembuka (presentational)
+      <div#app>     → pembungkus utama aplikasi
+        <header>    → identitas halaman, streak, statistik
+          <hgroup>  → judul + tanggal
+          <aside>   → kotak streak api (informasi sampingan)
+          <section> → grid statistik ringkasan
+        <nav>       → tombol navigasi / aksi utama
+        <form>      → formulir tambah entri baru
+          <fieldset>  → grup field logis
+          <legend>    → judul grup field
+        <main>      → konten utama halaman
+          <section> → rekap bulanan
+          <section> → materi dipelajari
+          <section> → proyek dibuat
+          <section> → log harian
+            <article> → setiap entri catatan belajar
+        <footer>    → informasi bawah halaman
+  =====================================================================
+-->
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Jurnal harian belajar koding — catat waktu, materi, dan proyek setiap hari." />
+  <title>koding.daily — Jurnal Belajar Koding</title>
+
+  <!-- Font: Plus Jakarta Sans — modern, bersih, mudah dibaca -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="belajar-koding.css">
+</head>
+
+<body>
+
+  <!--
+    ============================================================
+    LAYAR INTRO
+    Catatan: menggunakan <div> karena ini bukan bagian dokumen —
+    hanya animasi visual sementara yang hilang setelah 3 detik.
+    ============================================================
+  -->
+  <div id="layar-intro" role="presentation" aria-hidden="true">
+    <p class="intro-nama">koding<span>.</span>daily</p>
+    <p class="intro-tagline">jurnal belajar harianmu</p>
+    <div class="intro-garis" aria-hidden="true"></div>
+  </div>
+
+
+  <!--
+    ============================================================
+    #APP — Pembungkus seluruh aplikasi
+    Menggunakan <div> karena hanya wrapper animasi opacity,
+    bukan memiliki makna semantik sendiri.
+    ============================================================
+  -->
+  <div id="app">
+
+    <!-- ============================================================
+         <header> — Kepala halaman
+         Berisi: identitas (hgroup), streak api (aside), statistik (section)
+         Semantik HTML5: header = konten pengantar/kepala halaman
+    ============================================================ -->
+    <header>
+
+      <div class="baris-atas">
+
+        <!--
+          <hgroup> — Kelompok judul
+          Semantik: hgroup mengelompokkan h1 + paragraf deskripsi
+          yang berhubungan sebagai satu unit judul halaman
+        -->
+        <hgroup>
+          <h1>koding<em>.</em>daily</h1>
+          <p id="tanggal-sekarang">Memuat tanggal...</p>
+        </hgroup>
+
+        <!--
+          <aside> — Informasi streak api (konten pendukung/sampingan)
+          Semantik: aside = konten yang berhubungan tapi bukan bagian
+          alur utama — streak adalah info pendukung motivasi pengguna
+          aria-label memberikan konteks bagi screen reader
+        -->
+        <!--
+          <aside> — Informasi streak api (konten sampingan/pelengkap)
+          Di dalamnya ada .partikel-container untuk efek visual Gold+
+        -->
+        <aside aria-label="streak" id="aside-streak">
+          <!-- Partikel latar (muncul di level Gold, Epic, Legend) -->
+          <div class="partikel-container" id="partikel-container" aria-hidden="true"></div>
+
+          <!--
+            Api SVG — warnanya dikontrol penuh via JS.
+            Saat mati: tampilkan ikon tidur.
+            Saat aktif: SVG api dengan gradien warna sesuai level.
+          -->
+          <div class="api-wrapper" id="api-wrapper" role="img" aria-label="ikon api streak">
+            <!-- SVG akan diisi oleh JS lewat innerHTML -->
+          </div>
+
+          <div class="streak-info">
+            <span class="streak-angka" id="streak-angka">0</span>
+            <span class="streak-label">hari berturut-turut</span>
+            <span class="streak-pesan" id="streak-pesan">Mulai belajar hari ini!</span>
+            <!-- Badge nama level — diisi oleh JS -->
+            <span class="streak-badge-level" id="streak-badge-level" style="display:none"></span>
+          </div>
+        </aside>
+
+      </div><!-- /.baris-atas -->
+
+      <!--
+        <section> — Ringkasan statistik global
+        Semantik: section = kumpulan konten bertema/berkaitan
+        Di sini: kumpulan angka ringkasan keseluruhan belajar
+        Setiap kartu statistik adalah <article> karena konten mandiri
+      -->
+      <section aria-label="statistik global">
+
+        <article>
+          <p class="stat-nilai" id="total-menit">0 mnt</p>
+          <p class="stat-label">Total Waktu Belajar</p>
+        </article>
+
+        <article>
+          <p class="stat-nilai" id="total-hari">0</p>
+          <p class="stat-label">Hari Belajar</p>
+        </article>
+
+        <article>
+          <p class="stat-nilai" id="total-proyek">0</p>
+          <p class="stat-label">Proyek Dibuat</p>
+        </article>
+
+        <article>
+          <p class="stat-nilai" id="total-topik">0</p>
+          <p class="stat-label">Topik Dipelajari</p>
+        </article>
+
+      </section><!-- /section statistik global -->
+
+    </header><!-- /header -->
+
+
+    <!-- ============================================================
+         <nav> — Navigasi aksi utama
+         Semantik: nav = kumpulan tautan/tombol navigasi utama
+         Tombol ini mengontrol interaksi utama pengguna
+    ============================================================ -->
+    <nav aria-label="aksi utama">
+      <button
+        class="tombol-utama"
+        type="button"
+        onclick="toggleForm()"
+        aria-expanded="false"
+        aria-controls="form-entri"
+        id="tombol-buka-form"
+      >
+        <span aria-hidden="true">+</span> Tambah Entri Hari Ini
+      </button>
+    </nav><!-- /nav -->
+
+
+    <!-- ============================================================
+         <form> — Formulir tambah catatan belajar baru
+         Semantik: form = formulir pengiriman/input data pengguna
+         <fieldset> mengelompokkan field yang secara logis berkaitan
+         <legend> adalah judul/label untuk fieldset
+    ============================================================ -->
+    <form
+      id="form-entri"
+      aria-label="Form tambah catatan belajar baru"
+      aria-hidden="true"
+      onsubmit="simpanEntri(event)"
+      novalidate
+    >
+
+      <!-- Grup 1: Informasi sesi belajar -->
+      <fieldset>
+        <legend>Informasi Sesi</legend>
+        <div class="grid-form">
+
+          <div>
+            <label for="inputTanggal">Tanggal Belajar</label>
+            <input
+              type="date"
+              id="inputTanggal"
+              name="tanggal"
+              required
+              aria-required="true"
+            />
+          </div>
+
+          <div>
+            <label>Durasi Belajar</label>
+            <div class="grup-durasi">
+              <input
+                type="number"
+                id="inputJam"
+                name="jam"
+                placeholder="0 jam"
+                min="0"
+                max="24"
+                aria-label="Jam belajar"
+              />
+              <input
+                type="number"
+                id="inputMenit"
+                name="menit"
+                placeholder="0 menit"
+                min="0"
+                max="59"
+                aria-label="Menit belajar"
+              />
+            </div>
+          </div>
+
+          <div class="penuh">
+            <label for="inputJudul">Judul Sesi Belajar</label>
+            <input
+              type="text"
+              id="inputJudul"
+              name="judul"
+              placeholder="contoh: Belajar Flexbox & CSS Grid"
+              required
+              aria-required="true"
+            />
+          </div>
+
+          <div class="penuh">
+            <label for="inputCatatan">Catatan Apa yang Dipelajari</label>
+            <textarea
+              id="inputCatatan"
+              name="catatan"
+              placeholder="Tuliskan apa saja yang kamu pelajari hari ini..."
+            ></textarea>
+          </div>
+
+        </div>
+      </fieldset>
+
+      <!-- Grup 2: Topik/materi yang dipelajari -->
+      <fieldset>
+        <legend>Topik yang Dipelajari (boleh pilih lebih dari satu)</legend>
+        <div class="daftar-tag" id="daftar-tag-topik" role="group" aria-label="Pilih topik belajar">
+          <span class="tag" role="checkbox" aria-checked="false" tabindex="0" onclick="toggleTag(this)" onkeydown="tagKeydown(event,this)">HTML</span>
+          <span class="tag" role="checkbox" aria-checked="false" tabindex="0" onclick="toggleTag(this)" onkeydown="tagKeydown(event,this)">CSS</span>
+          <span class="tag" role="checkbox" aria-checked="false" tabindex="0" onclick="toggleTag(this)" onkeydown="tagKeydown(event,this)">JavaScript</span>
+          <span class="tag" role="checkbox" aria-checked="false" tabindex="0" onclick="toggleTag(this)" onkeydown="tagKeydown(event,this)">Python</span>
+          <span class="tag" role="checkbox" aria-checked="false" tabindex="0" onclick="toggleTag(this)" onkeydown="tagKeydown(event,this)">React</span>
+          <span class="tag" role="checkbox" aria-checked="false" tabindex="0" onclick="toggleTag(this)" onkeydown="tagKeydown(event,this)">Git</span>
+          <span class="tag" role="checkbox" aria-checked="false" tabindex="0" onclick="toggleTag(this)" onkeydown="tagKeydown(event,this)">SQL</span>
+          <span class="tag" role="checkbox" aria-checked="false" tabindex="0" onclick="toggleTag(this)" onkeydown="tagKeydown(event,this)">API</span>
+          <span class="tag" role="checkbox" aria-checked="false" tabindex="0" onclick="toggleTag(this)" onkeydown="tagKeydown(event,this)">Algoritma</span>
+          <span class="tag" role="checkbox" aria-checked="false" tabindex="0" onclick="toggleTag(this)" onkeydown="tagKeydown(event,this)">Lainnya</span>
+        </div>
+      </fieldset>
+
+      <!-- Grup 3: Proyek yang dibuat (opsional) -->
+      <fieldset>
+        <legend>Proyek yang Dibuat (opsional)</legend>
+        <div class="grid-form">
+
+          <div class="penuh">
+            <label for="inputNamaProyek">Nama Proyek</label>
+            <input
+              type="text"
+              id="inputNamaProyek"
+              name="nama-proyek"
+              placeholder="contoh: Kalkulator Sederhana"
+            />
+          </div>
+
+          <div>
+            <label for="inputDeskProyek">Deskripsi Proyek</label>
+            <input
+              type="text"
+              id="inputDeskProyek"
+              name="deskripsi-proyek"
+              placeholder="contoh: Dibuat pakai HTML + JS"
+            />
+          </div>
+
+          <div>
+            <label for="inputStatus">Status Proyek</label>
+            <select id="inputStatus" name="status-proyek">
+              <option value="selesai">✅ Selesai</option>
+              <option value="proses">🔄 Sedang Dikerjakan</option>
+              <option value="ide">💡 Masih Ide</option>
+            </select>
+          </div>
+
+        </div>
+      </fieldset>
+
+      <!-- Tombol form -->
+      <div class="baris-aksi">
+        <button type="submit">Simpan Entri</button>
+        <button type="button" class="batal" onclick="toggleForm()">Batal</button>
+      </div>
+
+    </form><!-- /form#form-entri -->
+
+
+    <!-- ============================================================
+         <main> — Konten utama halaman
+         Semantik: main = konten inti dokumen (hanya boleh 1 per halaman)
+         Di dalamnya: beberapa <section> sebagai blok tematik
+    ============================================================ -->
+    <main>
+
+      <!-- ==========================================
+           <section> 1: Rekap Per Bulan
+           Semantik: section karena ini blok tematik tersendiri
+           Header section berisi h2 sebagai judul blok
+      ========================================== -->
+      <section aria-label="Rekap belajar per bulan">
+        <header>
+          <h2>Rekap Per Bulan</h2>
+        </header>
+        <!-- .kisi-bulan diisi oleh JavaScript -->
+        <div class="kisi-bulan" id="kisi-bulan">
+          <p class="pesan-kosong">Belum ada data. Mulai catat belajarmu! 📅</p>
+        </div>
+      </section>
+
+
+      <!-- ==========================================
+           <section> 2: Materi yang Dipelajari
+      ========================================== -->
+      <section aria-label="Topik materi yang sudah dipelajari">
+        <header>
+          <h2>Materi Dipelajari</h2>
+        </header>
+        <!-- .kisi-materi diisi oleh JavaScript -->
+        <div class="kisi-materi" id="kisi-materi">
+          <p class="pesan-kosong">Belum ada materi yang dicatat.</p>
+        </div>
+      </section>
+
+
+      <!-- ==========================================
+           <section> 3: Proyek yang Dibuat
+      ========================================== -->
+      <section aria-label="Daftar proyek yang sudah dibuat">
+        <header>
+          <h2>Proyek Dibuat</h2>
+        </header>
+        <!-- .kisi-proyek diisi oleh JavaScript -->
+        <div class="kisi-proyek" id="kisi-proyek">
+          <p class="pesan-kosong">Belum ada proyek. Yuk buat sesuatu! 🚀</p>
+        </div>
+      </section>
+
+
+      <!-- ==========================================
+           <section> 4: Log Harian
+           <article> = tiap entri belajar yang berdiri sendiri
+           <time>    = elemen semantik untuk tanggal/waktu
+      ========================================== -->
+      <section aria-label="Riwayat catatan belajar harian">
+        <header>
+          <h2>Log Harian</h2>
+        </header>
+        <!-- .daftar-log diisi oleh JavaScript -->
+        <div class="daftar-log" id="daftar-log">
+          <p class="pesan-kosong">Belum ada catatan belajar. Mulai hari ini! 📝</p>
+        </div>
+      </section>
+
+    </main><!-- /main -->
+
+
+    <!-- ============================================================
+         <footer> — Bagian bawah halaman
+         Semantik: footer = informasi penutup/tambahan halaman
+    ============================================================ -->
+    <footer>
+      <p>koding.daily &mdash; catatan perjalananmu belajar koding &mdash; <span id="tahun-footer"></span></p>
+    </footer>
+
+  </div><!-- /#app -->
+
+
+  <!-- ============================================================
+       JAVASCRIPT — Logika interaktif
+       Semua ID/class selector menyesuaikan elemen semantik HTML5
+  ============================================================ -->
+  <script>
+
+    /* =============================================
+       HELPER: Format total menit → "X jam Y mnt"
+    ============================================= */
+    function formatMenit(total) {
+      if (total === 0) return '0 mnt';
+      const j = Math.floor(total / 60);
+      const m = total % 60;
+      if (j === 0) return `${m} mnt`;
+      if (m === 0) return `${j} jam`;
+      return `${j} jam ${m} mnt`;
+    }
+
+    /* Format "2025-06" → "Juni 2025" */
+    function namaBulan(kunci) {
+      const [thn, bln] = kunci.split('-');
+      const nama = [
+        'Januari','Februari','Maret','April','Mei','Juni',
+        'Juli','Agustus','September','Oktober','November','Desember'
+      ];
+      return `${nama[parseInt(bln) - 1]} ${thn}`;
+    }
+
+    /* Ikon untuk setiap topik materi */
+    const IKON_MATERI = {
+      'HTML'      : '🌐',
+      'CSS'       : '🎨',
+      'JavaScript': '⚡',
+      'Python'    : '🐍',
+      'React'     : '⚛️',
+      'Git'       : '🔀',
+      'SQL'       : '🗄️',
+      'API'       : '🔌',
+      'Algoritma' : '🧠',
+      'Lainnya'   : '📚',
+    };
+
+    /* Label teks untuk status proyek */
+    const LABEL_STATUS = {
+      selesai : '✅ Selesai',
+      proses  : '🔄 Dalam Proses',
+      ide     : '💡 Masih Ide',
+    };
+
+
+    /* =============================================
+       DATA — Diambil dari localStorage browser
+    ============================================= */
+    let dataBelajar = JSON.parse(localStorage.getItem('kodingDaily_v4')) || [];
+
+
+    /* =============================================
+       INIT — Jalankan saat halaman pertama dibuka
+    ============================================= */
+    function init() {
+      const sekarang = new Date();
+
+      /* Tampilkan tanggal hari ini di header */
+      const opsiTanggal = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      document.getElementById('tanggal-sekarang').textContent =
+        sekarang.toLocaleDateString('id-ID', opsiTanggal);
+
+      /* Tampilkan tahun di footer */
+      document.getElementById('tahun-footer').textContent = sekarang.getFullYear();
+
+      /* Set default tanggal di form = hari ini */
+      document.getElementById('inputTanggal').value = sekarang.toISOString().split('T')[0];
+
+      /* Render semua bagian */
+      renderSemua();
+    }
+
+
+    /* =============================================
+       HITUNG STREAK — Hari belajar berturut-turut
+       Api MATI jika ada 1 hari yang terlewat
+    ============================================= */
+    function hitungStreak() {
+      if (!dataBelajar.length) return 0;
+
+      /* Ambil semua tanggal unik, urutkan terbaru ke terlama */
+      const tanggalUnik = [...new Set(dataBelajar.map(e => e.tanggal))].sort().reverse();
+
+      const hariIni  = new Date().toISOString().split('T')[0];
+      const kemarin  = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+
+      /*
+        Streak dianggap mati jika tanggal terakhir bukan
+        hari ini dan bukan kemarin
+      */
+      if (tanggalUnik[0] !== hariIni && tanggalUnik[0] !== kemarin) return 0;
+
+      let streak = 1;
+      for (let i = 1; i < tanggalUnik.length; i++) {
+        const tgl1    = new Date(tanggalUnik[i - 1]);
+        const tgl2    = new Date(tanggalUnik[i]);
+        const selisih = Math.round((tgl1 - tgl2) / 86400000);
+        if (selisih === 1) streak++;
+        else break; /* Ada hari yang terlewat, hentikan penghitungan */
+      }
+      return streak;
+    }
+
+
+    /* =============================================
+       SISTEM LEVEL STREAK — Warna api berubah sesuai level
+       💤 Mati   : 0 hari
+       🔥 Pemula : 1–6 hari   (api oranye)
+       🔥 Bronze : 7–13 hari  (api tembaga merah)
+       🔥 Silver : 14–29 hari (api biru perak)
+       🔥 Gold   : 30–49 hari (api emas berkilau)
+       🔥 Epic   : 50–99 hari (api ungu mistis)
+       🔥 Legend : 100+ hari  (api pelangi)
+    ============================================= */
+    const LEVEL_STREAK = [
+      {
+        min    : 100,
+        kunci  : 'legend',
+        label  : '🌈 LEGEND',
+        badgeClass : 'badge-legend',
+        partikel   : true,
+        warnaPartikel : ['#ff4444','#ff8800','#ffdd00','#44ff88','#44aaff','#cc44ff'],
+        pesanAktif : (n) => `🌈 ${n} HARI! KAMU ADALAH LEGEND!`,
+      },
+      {
+        min    : 50,
+        kunci  : 'epic',
+        label  : '💜 EPIC',
+        badgeClass : 'badge-epic',
+        partikel   : true,
+        warnaPartikel : ['#c084fc','#a855f7','#7c3aed','#d8b4fe','#e879f9'],
+        pesanAktif : (n) => `💜 ${n} hari! Status: EPIC!`,
+      },
+      {
+        min    : 30,
+        kunci  : 'gold',
+        label  : '🥇 GOLD',
+        badgeClass : 'badge-gold',
+        partikel   : true,
+        warnaPartikel : ['#fde047','#fbbf24','#f59e0b','#fffde7','#fff176'],
+        pesanAktif : (n) => `🥇 ${n} hari! Sudah Level Gold!`,
+      },
+      {
+        min    : 14,
+        kunci  : 'silver',
+        label  : '🥈 SILVER',
+        badgeClass : 'badge-silver',
+        partikel   : false,
+        pesanAktif : (n) => `🥈 ${n} hari! Level Silver!`,
+      },
+      {
+        min    : 7,
+        kunci  : 'bronze',
+        label  : '🥉 BRONZE',
+        badgeClass : 'badge-bronze',
+        partikel   : false,
+        pesanAktif : (n) => `🥉 ${n} hari! Level Bronze!`,
+      },
+      {
+        min    : 1,
+        kunci  : 'pemula',
+        label  : '🔥 PEMULA',
+        badgeClass : 'badge-pemula',
+        partikel   : false,
+        pesanAktif : (n) => n >= 3 ? `${n} hari! Terus semangat!` : 'Bagus! Pertahankan streakmu!',
+      },
+    ];
+
+    function getLevelStreak(streak) {
+      if (streak === 0) return null;
+      return LEVEL_STREAK.find(l => streak >= l.min);
+    }
+
+
+    /* =============================================
+       BUAT PARTIKEL — Untuk level Gold, Epic, Legend
+    ============================================= */
+    function buatPartikel(kontainer, warna, jumlah = 8) {
+      kontainer.innerHTML = '';
+      for (let i = 0; i < jumlah; i++) {
+        const p      = document.createElement('span');
+        p.className  = 'partikel';
+        const ukuran = Math.random() * 5 + 3;
+        const w      = warna[Math.floor(Math.random() * warna.length)];
+        p.style.cssText = `
+          width:${ukuran}px; height:${ukuran}px;
+          left:${Math.random()*100}%;
+          bottom:0;
+          background:${w};
+          box-shadow:0 0 ${ukuran*2}px ${w};
+          animation-duration:${Math.random()*2+1.5}s;
+          animation-delay:${Math.random()*2}s;
+        `;
+        kontainer.appendChild(p);
+      }
+    }
+
+
+    /* =============================================
+       BUAT SVG API — Inject SVG berwarna sesuai level
+       Warna api itu sendiri yang berubah, bukan hanya glow.
+    ============================================= */
+    const BENTUK_LUAR  = 'M50 108 C28 96 15 72 26 48 C32 36 24 22 32 10 C36 38 46 32 48 18 C56 40 68 34 65 18 C78 36 82 58 74 78 C84 70 86 50 80 32 C93 52 90 82 76 98 C70 107 61 112 50 108Z';
+    const BENTUK_DALAM = 'M50 108 C33 99 24 80 31 58 C35 48 30 38 36 26 C39 46 47 42 49 30 C55 44 64 38 62 24 C71 40 74 62 68 78 C75 70 77 53 73 40 C83 57 81 82 71 96 C66 105 58 110 50 108Z';
+
+    const PALET_API = {
+      pemula : { c1:'#c2410c', c2:'#fb923c', c3:'#fed7aa', c4:'#fff7ed', glow:'rgba(251,146,60,0.55)' },
+      bronze : { c1:'#451a03', c2:'#d97706', c3:'#fbbf24', c4:'#fef3c7', glow:'rgba(245,158,11,0.6)'  },
+      silver : { c1:'#0c4a6e', c2:'#38bdf8', c3:'#bae6fd', c4:'#f0f9ff', glow:'rgba(56,189,248,0.65)' },
+      gold   : { c1:'#713f12', c2:'#ca8a04', c3:'#fde047', c4:'#fefce8', glow:'rgba(253,224,71,0.72)'  },
+      epic   : { c1:'#2e1065', c2:'#7c3aed', c3:'#c084fc', c4:'#fdf4ff', glow:'rgba(192,132,252,0.7)'  },
+    };
+
+    function buatSvgApi(kunci) {
+      if (kunci === 'legend') {
+        return `<svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="svgLG" x1="0%" y1="100%" x2="100%" y2="0%">
+              <stop offset="0%"   stop-color="#ff4444"><animate attributeName="stop-color" values="#ff4444;#ffdd00;#44ff88;#44aaff;#cc44ff;#ff4444" dur="3s" repeatCount="indefinite"/></stop>
+              <stop offset="40%"  stop-color="#ff8800"><animate attributeName="stop-color" values="#ff8800;#44ff88;#44aaff;#cc44ff;#ff4444;#ff8800" dur="3s" repeatCount="indefinite"/></stop>
+              <stop offset="75%"  stop-color="#ffdd00"><animate attributeName="stop-color" values="#ffdd00;#44aaff;#cc44ff;#ff4444;#ff8800;#ffdd00" dur="3s" repeatCount="indefinite"/></stop>
+              <stop offset="100%" stop-color="#ffffff"/>
+            </linearGradient>
+            <linearGradient id="svgLG-o" x1="20%" y1="100%" x2="80%" y2="0%">
+              <stop offset="0%"  stop-color="#cc44ff" stop-opacity=".7"><animate attributeName="stop-color" values="#cc44ff;#ff4444;#ffdd00;#44ff88;#44aaff;#cc44ff" dur="3s" repeatCount="indefinite"/></stop>
+              <stop offset="100%" stop-color="#ff4444" stop-opacity="0"/>
+            </linearGradient>
+            <filter id="svgLG-b"><feGaussianBlur stdDeviation="4.5"/></filter>
+          </defs>
+          <ellipse cx="50" cy="110" rx="23" ry="8" fill="#1a0a2a" opacity=".45"/>
+          <path filter="url(#svgLG-b)" opacity=".6" d="${BENTUK_LUAR}" fill="url(#svgLG-o)"/>
+          <path d="${BENTUK_LUAR}" fill="url(#svgLG-o)"/>
+          <path d="${BENTUK_DALAM}" fill="url(#svgLG)"/>
+          <ellipse cx="50" cy="80" rx="12" ry="16" fill="white" opacity=".72"/>
+          <ellipse cx="50" cy="88" rx="7" ry="10" fill="white" opacity=".88"/>
+        </svg>`;
+      }
+
+      const p = PALET_API[kunci];
+      if (!p) return '<span style="font-size:2.8rem;filter:grayscale(1) opacity(.3)">💤</span>';
+
+      return `<svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="svgC-${kunci}" cx="50%" cy="70%" r="55%">
+            <stop offset="0%"   stop-color="${p.c4}"/>
+            <stop offset="28%"  stop-color="${p.c3}"/>
+            <stop offset="60%"  stop-color="${p.c2}"/>
+            <stop offset="100%" stop-color="${p.c1}"/>
+          </radialGradient>
+          <radialGradient id="svgO-${kunci}" cx="50%" cy="55%" r="78%">
+            <stop offset="0%"   stop-color="${p.c3}" stop-opacity=".65"/>
+            <stop offset="100%" stop-color="${p.c1}"  stop-opacity="0"/>
+          </radialGradient>
+          <filter id="svgB-${kunci}"><feGaussianBlur stdDeviation="4"/></filter>
+        </defs>
+        <ellipse cx="50" cy="110" rx="22" ry="7.5" fill="${p.c1}" opacity=".4"/>
+        <path filter="url(#svgB-${kunci})" opacity=".6" d="${BENTUK_LUAR}" fill="${p.glow}"/>
+        <path d="${BENTUK_LUAR}" fill="url(#svgO-${kunci})"/>
+        <path d="${BENTUK_DALAM}" fill="url(#svgC-${kunci})"/>
+        <ellipse cx="50" cy="80" rx="12" ry="16" fill="${p.c4}" opacity=".7"/>
+        <ellipse cx="50" cy="87" rx="7" ry="10" fill="#ffffff" opacity=".55"/>
+      </svg>`;
+    }
+
+
+    /* =============================================
+       RENDER STREAK — Update tampilan api di <aside>
+    ============================================= */
+    function renderStreak() {
+      const streak     = hitungStreak();
+      const hariIni    = new Date().toISOString().split('T')[0];
+      const adaHariIni = dataBelajar.some(e => e.tanggal === hariIni);
+      const level      = getLevelStreak(streak);
+
+      const elAside    = document.getElementById('aside-streak');
+      const elWrapper  = document.getElementById('api-wrapper');
+      const elAngka    = document.getElementById('streak-angka');
+      const elPesan    = document.getElementById('streak-pesan');
+      const elBadge    = document.getElementById('streak-badge-level');
+      const elPartikel = document.getElementById('partikel-container');
+
+      const semuaLevel = ['level-mati','level-pemula','level-bronze','level-silver','level-gold','level-epic','level-legend'];
+      elAside.classList.remove(...semuaLevel);
+      if (elWrapper) elWrapper.classList.remove(...semuaLevel);
+      elAngka.classList.remove('mati', ...semuaLevel);
+      elAngka.textContent = streak;
+
+      /* ── STREAK MATI ── */
+      if (streak === 0 || !level) {
+        if (elWrapper) elWrapper.innerHTML = '<span style="font-size:2.8rem;filter:grayscale(1) opacity(0.3)">💤</span>';
+        elAngka.classList.add('mati');
+        elPesan.textContent = 'Streak mati. Ayo belajar sekarang!';
+        elPesan.classList.add('mati');
+        elPesan.style.color = '';
+        elBadge.style.display = 'none';
+        elAside.classList.add('level-mati');
+        if (elPartikel) elPartikel.innerHTML = '';
+        return;
+      }
+
+      /* ── STREAK HIDUP ── */
+      elPesan.classList.remove('mati');
+      const kelasLevel = `level-${level.kunci}`;
+      elAside.classList.add(kelasLevel);
+      if (elWrapper) {
+        elWrapper.classList.add(kelasLevel);
+        elWrapper.innerHTML = buatSvgApi(level.kunci);
+      }
+      elAngka.classList.add(kelasLevel);
+
+      elBadge.textContent   = level.label;
+      elBadge.className     = `streak-badge-level ${level.badgeClass}`;
+      elBadge.style.display = 'inline-block';
+
+      if (level.partikel && elPartikel) {
+        buatPartikel(elPartikel, level.warnaPartikel, 12);
+      } else if (elPartikel) {
+        elPartikel.innerHTML = '';
+      }
+
+      if (!adaHariIni) {
+        elPesan.textContent = '⚠️ Api mau padam! Belajar dulu!';
+        elPesan.style.color = '#d97706';
+      } else {
+        elPesan.textContent = level.pesanAktif(streak);
+        elPesan.style.color = '';
+      }
+    }
+
+
+
+    /* =============================================
+       RENDER STATISTIK GLOBAL — Kartu angka di header
+    ============================================= */
+    function renderStatistik() {
+      const totalMin   = dataBelajar.reduce((a, e) => a + e.menit, 0);
+      const totalHari  = new Set(dataBelajar.map(e => e.tanggal)).size;
+      const totalPrj   = dataBelajar.filter(e => e.proyek).length;
+      const semuaTopik = new Set(dataBelajar.flatMap(e => e.materi));
+
+      /* Update nilai di setiap <article> statistik dalam <section> header */
+      document.getElementById('total-menit').textContent  = formatMenit(totalMin);
+      document.getElementById('total-hari').textContent   = totalHari;
+      document.getElementById('total-proyek').textContent = totalPrj;
+      document.getElementById('total-topik').textContent  = semuaTopik.size;
+    }
+
+
+    /* =============================================
+       RENDER REKAP BULANAN — Kisi kartu per bulan
+    ============================================= */
+    function renderBulanan() {
+      const kontainer = document.getElementById('kisi-bulan');
+      kontainer.innerHTML = '';
+
+      if (!dataBelajar.length) {
+        kontainer.innerHTML = '<p class="pesan-kosong">Belum ada data. Mulai catat belajarmu! 📅</p>';
+        return;
+      }
+
+      /* Kelompokkan data per bulan menggunakan format "YYYY-MM" */
+      const perBulan = {};
+      dataBelajar.forEach(e => {
+        const kunci = e.tanggal.slice(0, 7);
+        if (!perBulan[kunci]) perBulan[kunci] = [];
+        perBulan[kunci].push(e);
+      });
+
+      /* Urutkan dari bulan terbaru ke terlama */
+      const kunciUrut = Object.keys(perBulan).sort().reverse();
+
+      /* Menit maksimal = untuk menghitung lebar progress bar */
+      const maksMin = Math.max(...kunciUrut.map(k =>
+        perBulan[k].reduce((a, e) => a + e.menit, 0)
+      ));
+
+      kunciUrut.forEach(k => {
+        const entri    = perBulan[k];
+        const totalMin = entri.reduce((a, e) => a + e.menit, 0);
+        const hariUnik = new Set(entri.map(e => e.tanggal)).size;
+        const topikSet = new Set(entri.flatMap(e => e.materi)).size;
+        const persen   = maksMin > 0 ? Math.round(totalMin / maksMin * 100) : 0;
+
+        /*
+          Setiap kartu bulan adalah <article> (konten mandiri)
+          di dalamnya ada <header> untuk judul kartu
+        */
+        const artikel = document.createElement('article');
+        artikel.innerHTML = `
+          <header>
+            <h3>${namaBulan(k)}</h3>
+            <span class="badge">${entri.length} sesi</span>
+          </header>
+          <div class="grid-stat-bulan">
+            <div class="bln-stat">
+              <p class="nilai">${formatMenit(totalMin)}</p>
+              <p class="keterangan">waktu belajar</p>
+            </div>
+            <div class="bln-stat">
+              <p class="nilai">${hariUnik}</p>
+              <p class="keterangan">hari belajar</p>
+            </div>
+            <div class="bln-stat">
+              <p class="nilai">${topikSet}</p>
+              <p class="keterangan">topik</p>
+            </div>
+          </div>
+          <div class="progress-bar" role="progressbar" aria-valuenow="${persen}" aria-valuemin="0" aria-valuemax="100" aria-label="Proporsi waktu belajar ${namaBulan(k)}">
+            <div class="isi" style="width: ${persen}%"></div>
+          </div>
+        `;
+        kontainer.appendChild(artikel);
+      });
+    }
+
+
+    /* =============================================
+       RENDER MATERI — Kisi kartu topik belajar
+    ============================================= */
+    function renderMateri() {
+      const grid = document.getElementById('kisi-materi');
+      grid.innerHTML = '';
+
+      /* Rekap total menit dan jumlah sesi per topik */
+      const rekap = {};
+      dataBelajar.forEach(e => {
+        e.materi.forEach(m => {
+          if (!rekap[m]) rekap[m] = { menit: 0, sesi: 0 };
+          rekap[m].menit += e.menit;
+          rekap[m].sesi  += 1;
+        });
+      });
+
+      if (!Object.keys(rekap).length) {
+        grid.innerHTML = '<p class="pesan-kosong">Belum ada materi yang dicatat.</p>';
+        return;
+      }
+
+      /* Setiap topik = satu <article> mandiri */
+      Object.entries(rekap).forEach(([nama, d]) => {
+        const artikel = document.createElement('article');
+        artikel.innerHTML = `
+          <span class="ikon" role="img" aria-label="${nama}">${IKON_MATERI[nama] || '📖'}</span>
+          <h3>${nama}</h3>
+          <p class="sesi">${d.sesi} sesi belajar</p>
+          <p class="durasi-materi">${formatMenit(d.menit)}</p>
+        `;
+        grid.appendChild(artikel);
+      });
+    }
+
+
+    /* =============================================
+       RENDER PROYEK — Kisi kartu proyek
+    ============================================= */
+    function renderProyek() {
+      const grid = document.getElementById('kisi-proyek');
+      grid.innerHTML = '';
+
+      const denganProyek = dataBelajar.filter(e => e.proyek);
+      if (!denganProyek.length) {
+        grid.innerHTML = '<p class="pesan-kosong">Belum ada proyek. Yuk buat sesuatu! 🚀</p>';
+        return;
+      }
+
+      denganProyek.forEach(e => {
+        const artikel = document.createElement('article');
+        artikel.innerHTML = `
+          <button
+            class="tombol-hapus"
+            onclick="hapusProyek(${e.id})"
+            title="Hapus proyek ini"
+            aria-label="Hapus proyek ${e.proyek.nama}"
+          >✕</button>
+          <span class="badge-status ${e.proyek.status}">${LABEL_STATUS[e.proyek.status]}</span>
+          <h3>${e.proyek.nama}</h3>
+          <p class="deskripsi">${e.proyek.deskripsi || 'Tidak ada deskripsi.'}</p>
+          <div class="tag-list" aria-label="Teknologi yang digunakan">
+            ${e.materi.map(m => `<span>${m}</span>`).join('')}
+          </div>
+        `;
+        grid.appendChild(artikel);
+      });
+    }
+
+
+    /* =============================================
+       RENDER LOG HARIAN — Daftar entri belajar
+       Menggunakan <article> + <time> secara semantik
+    ============================================= */
+    function renderLog() {
+      const kontainer = document.getElementById('daftar-log');
+      kontainer.innerHTML = '';
+
+      if (!dataBelajar.length) {
+        kontainer.innerHTML = '<p class="pesan-kosong">Belum ada catatan belajar. Mulai hari ini! 📝</p>';
+        return;
+      }
+
+      dataBelajar.forEach(e => {
+        /* Format tanggal untuk tampilan (bukan untuk atribut datetime) */
+        const tgl    = new Date(e.tanggal + 'T00:00:00');
+        const tglStr = tgl.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+
+        /*
+          <article> = setiap entri log berdiri sendiri sebagai konten mandiri
+          <time datetime="YYYY-MM-DD"> = elemen semantik untuk tanggal
+        */
+        const artikel = document.createElement('article');
+        artikel.innerHTML = `
+          <button
+            class="tombol-hapus"
+            onclick="hapusLog(${e.id})"
+            title="Hapus entri ini"
+            aria-label="Hapus entri belajar ${e.judul}"
+          >✕</button>
+          <div class="log-kiri">
+            <time datetime="${e.tanggal}">${tglStr}</time>
+            <span class="log-durasi">${formatMenit(e.menit)}</span>
+          </div>
+          <div class="log-kanan">
+            <h3>${e.judul}</h3>
+            <p>${e.catatan || 'Tidak ada catatan tambahan.'}</p>
+            <div class="tag-log" aria-label="Topik yang dipelajari">
+              ${e.materi.map(m => `<span>${IKON_MATERI[m] || ''} ${m}</span>`).join('')}
+            </div>
+          </div>
+        `;
+        kontainer.appendChild(artikel);
+      });
+    }
+
+
+    /* =============================================
+       RENDER SEMUA — Panggil semua fungsi render
+    ============================================= */
+    function renderSemua() {
+      renderStreak();
+      renderStatistik();
+      renderBulanan();
+      renderMateri();
+      renderProyek();
+      renderLog();
+    }
+
+
+    /* =============================================
+       TOGGLE FORM — Buka/tutup <form>
+       Update aria-expanded dan aria-hidden
+    ============================================= */
+    function toggleForm() {
+      const form   = document.getElementById('form-entri');
+      const tombol = document.getElementById('tombol-buka-form');
+      const buka   = form.classList.toggle('aktif');
+
+      /* Update atribut aksesibilitas */
+      tombol.setAttribute('aria-expanded', buka);
+      form.setAttribute('aria-hidden', !buka);
+    }
+
+
+    /* =============================================
+       TOGGLE TAG — Pilih/batalkan topik di form
+    ============================================= */
+    function toggleTag(el) {
+      const sekarangTerpilih = el.classList.toggle('terpilih');
+      el.setAttribute('aria-checked', sekarangTerpilih);
+    }
+
+    /* Dukungan keyboard untuk tag (tekan Enter atau Spasi) */
+    function tagKeydown(event, el) {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        toggleTag(el);
+      }
+    }
+
+
+    /* =============================================
+       SIMPAN ENTRI — Ambil data dari <form>, simpan
+    ============================================= */
+    function simpanEntri(event) {
+      event.preventDefault();
+
+      const tanggal  = document.getElementById('inputTanggal').value;
+      const jam      = parseInt(document.getElementById('inputJam').value)   || 0;
+      const mnt      = parseInt(document.getElementById('inputMenit').value) || 0;
+      const totalMin = jam * 60 + mnt;
+      const judul    = document.getElementById('inputJudul').value.trim();
+      const catatan  = document.getElementById('inputCatatan').value.trim();
+      const nmProyek = document.getElementById('inputNamaProyek').value.trim();
+      const dkProyek = document.getElementById('inputDeskProyek').value.trim();
+      const stProyek = document.getElementById('inputStatus').value;
+
+      /* Ambil tag topik yang bertanda terpilih */
+      const topikTerpilih = [...document.querySelectorAll('#daftar-tag-topik .tag.terpilih')]
+        .map(t => t.textContent);
+
+      /* Validasi field wajib */
+      if (!tanggal || totalMin === 0 || !judul) {
+        alert('Mohon isi tanggal, durasi belajar, dan judul sesi!');
+        return;
+      }
+
+      /* Buat objek data entri baru */
+      const entri = {
+        id      : Date.now(),
+        tanggal,
+        menit   : totalMin,
+        judul,
+        catatan,
+        materi  : topikTerpilih,
+        proyek  : nmProyek
+          ? { nama: nmProyek, deskripsi: dkProyek, status: stProyek }
+          : null,
+      };
+
+      /* Tambahkan ke depan array (terbaru duluan) */
+      dataBelajar.unshift(entri);
+      localStorage.setItem('kodingDaily_v4', JSON.stringify(dataBelajar));
+
+      /* Reset seluruh <form> */
+      document.getElementById('inputJam').value       = '';
+      document.getElementById('inputMenit').value     = '';
+      document.getElementById('inputJudul').value     = '';
+      document.getElementById('inputCatatan').value   = '';
+      document.getElementById('inputNamaProyek').value= '';
+      document.getElementById('inputDeskProyek').value= '';
+
+      /* Reset semua tag topik */
+      document.querySelectorAll('#daftar-tag-topik .tag').forEach(t => {
+        t.classList.remove('terpilih');
+        t.setAttribute('aria-checked', 'false');
+      });
+
+      toggleForm();
+      renderSemua();
+    }
+
+
+    /* =============================================
+       HAPUS LOG — Hapus satu entri dari data
+    ============================================= */
+    function hapusLog(id) {
+      if (!confirm('Hapus entri belajar ini?')) return;
+      dataBelajar = dataBelajar.filter(e => e.id !== id);
+      localStorage.setItem('kodingDaily_v4', JSON.stringify(dataBelajar));
+      renderSemua();
+    }
+
+
+    /* =============================================
+       HAPUS PROYEK — Hapus proyek dari satu entri
+    ============================================= */
+    function hapusProyek(id) {
+      if (!confirm('Hapus proyek ini dari catatan?')) return;
+      dataBelajar = dataBelajar.map(e => {
+        if (e.id === id) e.proyek = null;
+        return e;
+      });
+      localStorage.setItem('kodingDaily_v4', JSON.stringify(dataBelajar));
+      renderSemua();
+    }
+
+
+    /* =============================================
+       MULAI — Panggil init saat halaman siap
+    ============================================= */
+    init();
+
+  </script>
+
+</body>
+</html>
